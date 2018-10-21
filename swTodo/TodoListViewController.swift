@@ -90,7 +90,9 @@ extension TodoListViewController: UITableViewDataSource {
         cell.detailTextLabel?.text = todos[indexPath.item].detail
         return cell
     }
-    
+//    func tableView(_ tableView: UITableView, _ didSelectRowAt: indexPath: IndexPath) {
+//        
+//    }
     
 }
 extension TodoListViewController: UITableViewDelegate {

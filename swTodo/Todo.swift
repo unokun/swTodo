@@ -11,6 +11,8 @@ import Foundation
 class Todo {
     var title = ""
     var detail = ""
+    var deadline = ""
+    
     // TODO: enum
     // 新規： 0
     // 完了： 1
