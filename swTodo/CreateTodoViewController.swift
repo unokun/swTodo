@@ -7,9 +7,11 @@
 //
 
 import UIKit
+import Alamofire
 
 class CreateTodoViewController: UIViewController {
-    
+    let URL_CREATE = "http://localhost:3000/todo"
+
     @IBOutlet weak var todoTitle: UITextField!
     @IBOutlet weak var todoDeadline: UIDatePicker!
     @IBOutlet weak var todoDetail: UITextView!
@@ -20,11 +22,26 @@ class CreateTodoViewController: UIViewController {
         if (!isValideTodo()) {
             return
         }
-        let todo = Todo()
-        todo.title = todoTitle.text!
-        todo.detail = todoDetail.text!
+        let todo = createTodo()
         
         // [TODO]API通信
+        let params : [String : String] = ["title": todo.Title, "detail": todo.Detail, "deadline": todo.Deadline, "status": todo.Status]
+
+        Alamofire.request(URL_CREATE, method: .post, parameters: params).validate().responseJSON { response in
+//            guard let data = response.data else {
+//                return
+//            }
+//            let decoder = JSONDecoder()
+//            do {
+//                let response: TodoResponse = try decoder.decode(TodoResponse.self, from: data)
+//                print(response)
+//                
+//                
+//            } catch {
+//                print(error)
+//            }
+        }
+        
         // 閉じる
         // 一覧画面に遷移する
         let storyboard: UIStoryboard = self.storyboard!
@@ -50,12 +67,13 @@ class CreateTodoViewController: UIViewController {
     func createTodo() -> Todo {
         let todo = Todo()
         if let title = todoTitle.text {
-            todo.title = title
+            todo.Title = title
         }
-        todo.detail = todoDetail.text
+        todo.Detail = todoDetail.text
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
-        todo.deadline = formatter.string(from: todoDeadline.date)
+        todo.Deadline = formatter.string(from: todoDeadline.date)
+        todo.Status = "0"
         return todo
     }
     override func viewDidLoad() {
