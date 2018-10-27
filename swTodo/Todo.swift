@@ -8,32 +8,24 @@
 
 import Foundation
 
-struct TodoResponse: Codable {
-    var count = 0
-    let result: [Todo]
+struct JsonFeed: Codable {
+    let results: Results
 }
-    
-class Todo: Codable {
-    var Id = 0
-    var Title = ""
-    var Detail = ""
-    var Deadline = ""
-    
-    // TODO: enum
-    // 新規： 0
-    // 完了： 1
-    var Status = "0"
-    
-    init() {
-        
-    }
-    init(title: String, detail: String) {
-        self.Title = title
-        self.Detail = detail
-    }
-    init(title: String, detail: String, deadline: String) {
-        self.Title = title
-        self.Detail = detail
-        self.Deadline = deadline
-    }
+struct Results: Codable {
+    let uuid: String?
+    let todo: [Todo]?
+}
+
+struct Todo: Codable {
+    let id: String
+    let subject: String
+    let body: String
+    let limit: String
+    let status: Int
+}
+
+struct PostTodo: Codable {
+    let subject: String
+    let body: String
+    let limit: String
 }

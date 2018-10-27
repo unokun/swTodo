@@ -7,10 +7,9 @@
 //
 
 import UIKit
-import Alamofire
 
 class CreateTodoViewController: UIViewController {
-    let URL_CREATE = "http://localhost:3000/todo"
+    let appDelegate:AppDelegate = UIApplication.shared.delegate as! AppDelegate
 
     @IBOutlet weak var todoTitle: UITextField!
     @IBOutlet weak var todoDeadline: UIDatePicker!
@@ -22,27 +21,45 @@ class CreateTodoViewController: UIViewController {
         if (!isValideTodo()) {
             return
         }
-        let todo = createTodo()
-        
-        // [TODO]API通信
-        let params : [String : String] = ["title": todo.Title, "detail": todo.Detail, "deadline": todo.Deadline, "status": todo.Status]
-
-        Alamofire.request(URL_CREATE, method: .post, parameters: params).validate().responseJSON { response in
-//            guard let data = response.data else {
-//                return
-//            }
-//            let decoder = JSONDecoder()
-//            do {
-//                let response: TodoResponse = try decoder.decode(TodoResponse.self, from: data)
-//                print(response)
-//                
-//                
-//            } catch {
-//                print(error)
-//            }
+        guard let subject = todoTitle.text else {
+            return
         }
+        guard let body = todoDetail.text else {
+            return
+        }
+        let formatter = ISO8601DateFormatter()
+        formatter.timeZone = TimeZone.current
+        let limit = formatter.string(from: todoDeadline.date)
         
-        // 閉じる
+        do {
+            let parameters: [String: String] = [:]
+            let headers: [String: String] = ["Content-Type": "application/json", "X-REQUEST-UUID": appDelegate.getUuid()]
+            let todo = PostTodo(subject: subject, body: body, limit: limit)
+            let bodyParam = try JSONEncoder().encode(todo)
+            appDelegate.callApi(url: appDelegate.getBaseUrl() + "/todo/create", method: "POST", parameters: parameters, headers: headers, bodyParam: bodyParam, completionHandler: {
+                (data, response, error) -> Void in
+//                if let data = data {
+//                    do {
+//                        let decoder = JSONDecoder()
+//                        let feed = try decoder.decode(JsonFeed.self, from: data)
+//                        if let todos = feed.results.todo {
+//                            self.todos = todos
+//                        }
+//                    } catch {
+//                        print("Serialize Error")
+//                    }
+//                } else {
+//                    // [TODO]エラーメッセージ表示
+//                    print(error ?? "Error")
+//                }
+//                DispatchQueue.main.async {
+//                    // アニメーション終了
+//                    self.activityIndicatorView.stopAnimating()
+//                }
+            })
+        } catch {
+            print("encode error")
+        }
         // 一覧画面に遷移する
         let storyboard: UIStoryboard = self.storyboard!
         let second = storyboard.instantiateViewController(withIdentifier: "listTodo")
@@ -63,18 +80,6 @@ class CreateTodoViewController: UIViewController {
         // 本文
         // 期日
         return true
-    }
-    func createTodo() -> Todo {
-        let todo = Todo()
-        if let title = todoTitle.text {
-            todo.Title = title
-        }
-        todo.Detail = todoDetail.text
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        todo.Deadline = formatter.string(from: todoDeadline.date)
-        todo.Status = "0"
-        return todo
     }
     override func viewDidLoad() {
         // TODO本文入力エリアに枠線をつける

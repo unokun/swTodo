@@ -21,7 +21,25 @@
 # Web API
 * [Alamofire/Alamofire: Elegant HTTP Networking in Swift](https://github.com/Alamofire/Alamofire)
 * [SwiftでiOSアプリ開発入門 通信の仕組みとAlamofireの使い方を学ぶ \- WPJ](https://www.webprofessional.jp/a-crash-course-on-networking-in-ios/)
-* 
 
 ## Alamofireのインポート
 * [Carthage\(カーセッジ\)を使うとビルド時間が短縮 \- 杉田's ぶろぐ](http://sugita.hateblo.jp/entry/2017/12/09/225950)
+
+# JSON
+* [JSONDecoder \- Foundation \| Apple Developer Documentation](https://developer.apple.com/documentation/foundation/jsondecoder)
+
+* [Swift4でDispatchQueueを使う \- Qiita](https://qiita.com/lumbermill/items/7553a6ace26019f08bc6)
+
+* [【Swift 4 x PHP】iOS端末とPHPサーバでHTTP通信 \- Qiita](https://qiita.com/tukiyo3/items/90ad1cda60b82450930d)
+
+* [Swift で URL のクエリストリングを簡単に追加したい \- Qiita](https://qiita.com/KosukeOhmura/items/8b65bdb63da6df95c7a3)
+
+* [HTTP GETとPOST\(Swift\) \[URLRequest, URLSession\] iOS Objective\-C, Swift Tips\-モバイル開発系\(K\)](http://www.office-matsunaga.biz/ios/description.php?id=54)
+
+* [iOSでライブラリに頼らず、URLSessionを使ってHTTP通信する \- Qiita](https://qiita.com/yutailang0119/items/ab400cb7158295a9c171)
+
+* [\[Swift4\] HTTP通信 / WebAPIからデータを取得し利用する \| 🍙黒ごまのおむすび](https://blog.kuromusubi.com/develop/language/swift/20171117-webapi)
+
+* [DHC REST Client \- RESTのAPIを実行するならこのツール \- 覚えたら書く](https://blog.y-yuki.net/entry/2016/11/01/000000)
+
+* [CompletionHandlerを渡して通信終了後の処理を自在に実装 \| flatLevel56](http://flatlevel56.blogspot.com/2017/01/completionhandler.html)

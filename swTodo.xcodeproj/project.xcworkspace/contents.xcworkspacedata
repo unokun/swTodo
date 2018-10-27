@@ -2,12 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:../swTodo/delete-sign.png">
-   </FileRef>
-   <FileRef
-      location = "group:ToDo.png">
-   </FileRef>
-   <FileRef
       location = "self:">
    </FileRef>
 </Workspace>
