@@ -32,11 +32,10 @@ class CreateTodoViewController: UIViewController {
         let limit = formatter.string(from: todoDeadline.date)
         
         do {
-            let parameters: [String: String] = [:]
-            let headers: [String: String] = ["Content-Type": "application/json", "X-REQUEST-UUID": appDelegate.getUuid()]
+            let uuid: String = appDelegate.getUuid()
             let todo = PostTodo(subject: subject, body: body, limit: limit)
             let bodyParam = try JSONEncoder().encode(todo)
-            appDelegate.callApi(url: appDelegate.getBaseUrl() + "/todo/create", method: "POST", parameters: parameters, headers: headers, bodyParam: bodyParam, completionHandler: {
+            appDelegate.callApi(url: "/todo/create", uuid: uuid, bodyParam: bodyParam, completionHandler: {
                 (data, response, error) -> Void in
 //                if let data = data {
 //                    do {

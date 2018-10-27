@@ -55,29 +55,19 @@ class TodoListViewController: UIViewController {
                 alert.addAction(
                     UIAlertAction(title: "完了", style: UIAlertAction.Style.default, handler: {
                         (action: UIAlertAction) -> Void in
-//                        let params : [String : String] = ["id": String(todo.id), "title": todo.Title, "detail": todo.Detail, "deadline": todo.Deadline, "status": "1"]
-                        
-//                        Alamofire.request(self.URL_TODO, method: .put, parameters: params).validate().responseJSON { response in
-//                            print("完了")
-//                            // 再描画
-//                            self.todoListTableView.reloadData()
-//
-//                        }
-
+                        self.activityIndicatorView.startAnimating()
+                        // API呼び出し
+                        self.callUpdateTodoStatus(todo: todo, status: 2)
                     })
                 )
                 // 削除
                 alert.addAction(
                     UIAlertAction(title: "削除", style: UIAlertAction.Style.default, handler: {
                         (action: UIAlertAction) -> Void in
-                        let params : [String : String] = ["id": String(todo.id)]
-                        
-//                        Alamofire.request(self.URL_TODO, method: .delete, parameters: params).validate().responseJSON { response in
-//                            print("削除")
-//                            // 再描画
-//                            self.todoListTableView.reloadData()
-//
-//                        }
+                        self.activityIndicatorView.startAnimating()
+
+                        // API呼び出し
+                        self.callUpdateTodoStatus(todo: todo, status:3)
                     })
                 )
                 // キャンセル
@@ -92,12 +82,63 @@ class TodoListViewController: UIViewController {
         }
     }
     
+    /// API呼び出しを実施してTODOのステータスを更新する
+    ///
+    /// - Parameters:
+    ///   - todo: Todo
+    ///   - status: ステータス(1: 完了、2:削除)
+    func callUpdateTodoStatus(todo: Todo, status: Int) {
+        do {
+            let todoStatus = TodoStatus(status: status)
+            let bodyParam = try JSONEncoder().encode(todoStatus)
+            // TODOのステータス更新
+            let uuid = self.appDelegate.getUuid()
+            self.appDelegate.callApi(url: "/todo/update/" + todo.id
+                , uuid: uuid, bodyParam: bodyParam, completionHandler: {
+                    (data, response, error) -> Void in
+                    //
+                    self.didTodoStatusUpdated(data: data, response: response, error: error);
+            })
+        } catch {
+            print("encode error")
+        }
+    }
+    
+    /// <#Description#>
+    ///
+    /// - Parameters:
+    ///   - data: <#data description#>
+    ///   - response: <#response description#>
+    ///   - error: <#error description#>
+    func didTodoStatusUpdated(data: Data?, response: URLResponse?, error: Error?) {
+        //                                if let data = data {
+        //                                    do {
+        //                                        let decoder = JSONDecoder()
+        //                                        let feed = try decoder.decode(JsonFeed.self, from: data)
+        //                                        if let todos = feed.results.todo {
+        //                                            self.todos = todos
+        //                                        }
+        //                                    } catch {
+        //                                        print("Serialize Error")
+        //                                    }
+        //                                } else {
+        //                                    // [TODO]エラーメッセージ表示
+        //                                    print(error ?? "Error")
+        //                                }
+        // メインスレッドでの処理
+        DispatchQueue.main.async {
+            // アニメーション終了
+            self.activityIndicatorView.stopAnimating()
+            //
+            self.getTodoList()
+        }
+    }
+    
+    /// TODO一覧を取得
     func getTodoList() {
         activityIndicatorView.startAnimating()
-        let parameters: [String: String] = [:]
         let uuid = appDelegate.getUuid()
-        let headers: [String: String] = ["Content-Type": "application/json", "X-REQUEST-UUID": uuid]
-        appDelegate.callApi(url: appDelegate.getBaseUrl() + "/todo/list/1", method: "GET", parameters: parameters, headers: headers, completionHandler: {
+        appDelegate.callApi(url: "/todo/list/1", method: "GET", uuid: uuid, completionHandler: {
             (data, response, error) -> Void in
             if let data = data {
                 do {
@@ -113,6 +154,7 @@ class TodoListViewController: UIViewController {
                 // [TODO]エラーメッセージ表示
                 print(error ?? "Error")
             }
+            // メインスレッドでの処理
             DispatchQueue.main.async {
                 // アニメーション終了
                 self.activityIndicatorView.stopAnimating()
@@ -124,38 +166,20 @@ class TodoListViewController: UIViewController {
 //            // 非同期処理などを実行
 //            Thread.sleep(forTimeInterval: 5)
 //
+//              todos.append(Todo(title: "Todo1", detail: "最初のTodo"))
+//              todos.append(Todo(title: "Todo2", detail: "2番目の最初のTodo"))
+//              todos.append(Todo(title: "Todo3", detail: "3番目の最初のTodo"))
+        
 //            // 非同期処理などが終了したらメインスレッドでアニメーション終了
 //            DispatchQueue.main.async {
 //                // アニメーション終了
 //                self.activityIndicatorView.stopAnimating()
 //            }
 //        }
-//        let params : [String : String] = [:]
-        
-//        Alamofire.request(URL_TODOLIST).validate().responseJSON { response in
-//            guard let data = response.data else {
-//                return
-//            }
-//            let decoder = JSONDecoder()
-//            do {
-//                let response: TodoResponse = try decoder.decode(TodoResponse.self, from: data)
-//                print(response)
-//
-//                self.todos = response.result
-//                // 再描画
-//                self.todoListTableView.reloadData()
-//
-//            } catch {
-//                print(error)
-//            }
-//        }
-
-//        todos.append(Todo(title: "Todo1", detail: "最初のTodo"))
-//        todos.append(Todo(title: "Todo2", detail: "2番目の最初のTodo"))
-//        todos.append(Todo(title: "Todo3", detail: "3番目の最初のTodo"))
     }
-
 }
+//
+// ListView
 extension TodoListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return todos.count

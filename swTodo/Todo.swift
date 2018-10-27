@@ -29,3 +29,7 @@ struct PostTodo: Codable {
     let body: String
     let limit: String
 }
+
+struct TodoStatus: Codable {
+    let status: Int
+}
