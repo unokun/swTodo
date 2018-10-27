@@ -14,6 +14,7 @@ class TodoListViewController: UIViewController {
     @IBOutlet weak var todoListTableView: UITableView!
     var todos: [Todo] = []
     var activityIndicatorView = UIActivityIndicatorView()
+    let refreshControl = UIRefreshControl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,10 +29,15 @@ class TodoListViewController: UIViewController {
         
         view.addSubview(activityIndicatorView)
         
+        refreshControl.addTarget(self, action: #selector(didPullToRefresh(_:)), for: .valueChanged)
+        todoListTableView.addSubview(refreshControl)
+        
         // 未完了TODO一覧取得
         getTodoList()
         
     }
+
+    
     override func viewDidAppear(_ animated: Bool) {
         // 長押しイベント
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(self.cellLongPressed(_:)))
@@ -200,4 +206,21 @@ extension TodoListViewController: UITableViewDataSource {
 }
 extension TodoListViewController: UITableViewDelegate {
     
+}
+
+//
+// pullToReflesh
+extension TodoListViewController {
+    @objc private func didPullToRefresh(_ sender: AnyObject) {
+        DispatchQueue.global().async {
+            Thread.sleep(forTimeInterval: 1.0)
+            DispatchQueue.main.async {
+                self.completeRefresh()
+            }
+        }
+    }
+    private func completeRefresh() {
+        refreshControl.endRefreshing()
+        todoListTableView.reloadData()
+    }
 }
