@@ -43,3 +43,20 @@
 * [DHC REST Client \- RESTのAPIを実行するならこのツール \- 覚えたら書く](https://blog.y-yuki.net/entry/2016/11/01/000000)
 
 * [CompletionHandlerを渡して通信終了後の処理を自在に実装 \| flatLevel56](http://flatlevel56.blogspot.com/2017/01/completionhandler.html)
+
+# UserDeafults
+
+# その他
+* [UITableViewに引っ張る更新Pull to Refreshを実装する \- もちゅろぐ](http://mothulog.hateblo.jp/entry/uitableview-pull-to-refresh)
+* [DHC REST Client \- RESTのAPIを実行するならこのツール \- 覚えたら書く](https://blog.y-yuki.net/entry/2016/11/01/000000)
+
+# Codable
+[JSONEncoder\(\)](https://qiita.com/tamappe/items/62a358764778cb6edf09)
+
+# dataTask(:completionHandler)
+[CompletionHandlerを渡して通信終了後の処理を自在に実装 \| flatLevel56](http://flatlevel56.blogspot.com/2017/01/completionhandler.html)
+
+# HTTP Request
+[How to make HTTP Post request with JSON body in Swift \- Stack Overflow](https://stackoverflow.com/questions/31937686/how-to-make-http-post-request-with-json-body-in-swift)
+* [iOSでライブラリに頼らず、URLSessionを使ってHTTP通信する \- Qiita](https://qiita.com/yutailang0119/items/ab400cb7158295a9c171)
+
