@@ -15,6 +15,15 @@ class CreateTodoViewController: UIViewController {
     @IBOutlet weak var todoDeadline: UIDatePicker!
     @IBOutlet weak var todoDetail: UITextView!
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        // キーボードをしまう(フォーカスアウト)
+        if todoTitle.isFirstResponder {
+            todoTitle.resignFirstResponder()
+        }
+        if todoDetail.isFirstResponder {
+            todoDetail.resignFirstResponder()
+        }
+    }
     @IBAction func createButtonTapped(_ sender: UIButton) {
         print("作成ボタンがタップされた")
         // 入力値チェック
@@ -23,12 +32,6 @@ class CreateTodoViewController: UIViewController {
         }
         let subject = todoTitle.text!
         let body = todoDetail.text!
-//        guard let subject = todoTitle.text else {
-//            return
-//        }
-//        guard let body = todoDetail.text else {
-//            return
-//        }
         let formatter = ISO8601DateFormatter()
         formatter.timeZone = TimeZone.current
         let limit = formatter.string(from: todoDeadline.date)
@@ -41,21 +44,6 @@ class CreateTodoViewController: UIViewController {
             appDelegate.callApi(url: "/todo/create", uuid: uuid, bodyParam: bodyParam, completionHandler: {
                 (data, response, error) -> Void in
                 success = (data != nil)
-//                if let data = data {
-//                    success = true
-//                    do {
-//                        let decoder = JSONDecoder()
-//                        let feed = try decoder.decode(JsonFeed.self, from: data)
-//                        if let todos = feed.results.todo {
-//                            self.todos = todos
-//                        }
-//                    } catch {
-//                        print("Serialize Error")
-//                    }
-//                } else {
-//                    // [TODO]エラーメッセージ表示
-//                    print(error ?? "Error")
-//                }
                 DispatchQueue.main.async {
                     self.showCreateTodoResult(success:  success)
                     // アニメーション終了
@@ -138,7 +126,7 @@ class CreateTodoViewController: UIViewController {
     }
     
     override func viewDidLoad() {
-        // TODO本文入力エリアに枠線をつける
+        // 本文入力エリアに枠線をつける
         todoDetail.layer.borderWidth = 1
         todoDetail.layer.borderColor = UIColor.lightGray.cgColor
         
