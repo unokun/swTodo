@@ -5,7 +5,9 @@
 //  Created by Masaaki Uno on 2018/10/20.
 //  Copyright © 2018 Masaaki Uno. All rights reserved.
 //
-
+// ハンバーガーメニュー
+// http://swift.hiros-dot.net/?p=377
+//
 import UIKit
 
 class MenuViewController: UIViewController {
