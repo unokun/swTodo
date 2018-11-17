@@ -20,11 +20,16 @@ class CreateTodoViewController: UIViewController {
     @IBOutlet weak var todoTitle: UITextField!
 //    @IBOutlet weak var todoDeadline: UIDatePicker!
     @IBOutlet weak var todoDetail: UITextView!
-    
     @IBOutlet weak var todoLimitDate: UITextField!
+    
+    @IBOutlet weak var todoCreateButton: UIButton!
+    
     var toolBar: UIToolbar!
     
     override func viewDidLoad() {
+        // 作成ボタンを活性状態を更新する
+        updateTodoCreateButton();
+        
         // 本文入力エリアに枠線をつける
         todoDetail.layer.borderWidth = 1
         todoDetail.layer.borderColor = UIColor.lightGray.cgColor
@@ -39,15 +44,38 @@ class CreateTodoViewController: UIViewController {
         todoLimitDate.inputAccessoryView = toolBar
         
     }
-
+    
+    /// Todo作成ボタンの状態を更新する
+    func updateTodoCreateButton() {
+        todoCreateButton.isEnabled = isEditeCompleted()
+    }
+    
+    /// 編集完了(タイトル、詳細、期限が入力されている)かどうか
+    ///
+    /// - Returns: <#return value description#>
+    func isEditeCompleted() -> Bool {
+        if todoTitle.text!.isEmpty {
+            return false;
+        }
+        if todoDetail.text!.isEmpty {
+            return false;
+        }
+        if todoLimitDate.text!.isEmpty {
+            return false;
+        }
+        return true
+    }
     // datepicker関連処理
     // 「閉じる」ボタンタップ
     @objc func closeButtonTapped() {
         todoLimitDate.resignFirstResponder()
     }
     
+    /// 期限入力フィールドのイベント：編集終了(フォーカスアウト)
+    ///
+    /// - Parameter sender: <#sender description#>
     @IBAction func todoLimitEdittingEnd(_ sender: UITextField) {
-
+        updateTodoCreateButton()
     }
     
     
@@ -98,9 +126,15 @@ class CreateTodoViewController: UIViewController {
         // キーボードをしまう(フォーカスアウト)
         if todoTitle.isFirstResponder {
             todoTitle.resignFirstResponder()
+            updateTodoCreateButton()
         }
         if todoDetail.isFirstResponder {
             todoDetail.resignFirstResponder()
+            updateTodoCreateButton()
+        }
+        if todoLimitDate.isFirstResponder {
+            todoLimitDate.resignFirstResponder()
+            updateTodoCreateButton()
         }
     }
     @IBAction func createButtonTapped(_ sender: UIButton) {

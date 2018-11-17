@@ -97,6 +97,7 @@
                         <viewLayoutGuide key="safeArea" id="yb4-vD-D4b"/>
                     </view>
                     <connections>
+                        <outlet property="todoCreateButton" destination="hOO-vI-uvc" id="8c9-O6-Tn1"/>
                         <outlet property="todoDetail" destination="BRZ-ee-kBp" id="eb9-Lv-2ND"/>
                         <outlet property="todoLimitDate" destination="R9B-rz-hYs" id="pKg-DC-bDy"/>
                         <outlet property="todoTitle" destination="GHw-al-hIf" id="6hj-bR-FGK"/>
