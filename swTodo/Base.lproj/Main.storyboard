@@ -166,6 +166,8 @@
                     <connections>
                         <outlet property="menuTitles" destination="KYw-v0-Q4L" id="BUR-E4-f48"/>
                         <outlet property="menuView" destination="b9V-vv-Rqb" id="4Iq-oP-wlx"/>
+                        <segue destination="7ph-cB-pti" kind="presentation" identifier="menuToList" id="xZ6-ly-vW5"/>
+                        <segue destination="ALu-8i-iX1" kind="presentation" identifier="menuToCreate" id="mea-0F-t0C"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hYH-HO-v4w" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -262,6 +264,7 @@
         <image name="menu.png" width="100" height="100"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="mea-0F-t0C"/>
         <segue reference="dG9-41-zcf"/>
     </inferredMetricsTieBreakers>
 </document>

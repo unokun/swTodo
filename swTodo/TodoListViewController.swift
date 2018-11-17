@@ -231,9 +231,8 @@ extension TodoListViewController: UITableViewDataSource {
 }
 extension TodoListViewController: UITableViewDelegate {
     // セルがタップされた
-    //    func tableView(_ tableView: UITableView, _ didSelectRowAt: indexPath: IndexPath) {
-    //
-    //    }
+//    func tableView(_ tableView: UITableView, _ indexPath: IndexPath) {
+//    }
 
 }
 

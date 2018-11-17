@@ -27,10 +27,7 @@ class MenuViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        // クリックイベント
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.cellTapped(_:)))
-        self.menuTitles.addGestureRecognizer(tapRecognizer)
-        
+        // ハンバーガーメニューを開く
         let menuPos = self.menuView.layer.position
         self.menuView.layer.position.x = -self.menuView.frame.width
         UIView.animate(
@@ -46,6 +43,7 @@ class MenuViewController: UIViewController {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
         for touch in touches {
+            // ハンバーガーメニューを閉じる
             if touch.view?.tag == 1 {
                 UIView.animate(
                     withDuration: 0.2,
@@ -61,48 +59,6 @@ class MenuViewController: UIViewController {
             }
         }
     }
-    @objc func cellTapped(_ recognizer: UITapGestureRecognizer) {
-        // 押された位置でcellのPathを取得
-        let point = recognizer.location(in: menuTitles)
-        
-        if let indexPath = menuTitles.indexPathForRow(at: point) {
-            
-            if recognizer.state == UIGestureRecognizer.State.ended  {
-                // 長押しされた場合の処理
-                let index = indexPath.row
-                print("タップcellのindexPath:\(index)")
-
-                if (index == 2) {
-                    let alert: UIAlertController = UIAlertController(title: "通常は利用しているライブラリなどを表示します。ライブラリによってはライセンス上、アプリで利用していることを明記する必要がある場合が多いです。", message: "", preferredStyle:  UIAlertController.Style.actionSheet)
-                    alert.addAction(
-                        UIAlertAction(title: "閉じる", style: UIAlertAction.Style.default, handler: {
-                            (action: UIAlertAction) -> Void in
-                            // TODO
-                            print("完了")
-                        })
-                    )
-                    self.present(alert, animated: true, completion: nil)
-                    return
-                }
-                
-                // 画面遷移
-                var target: String = ""
-                switch (index) {
-                case 0:
-                    target = "listTodo"
-                case 1:
-                    target = "createTodo"
-                default:
-                    target = "listTodo"
-                }
-                
-                let storyboard: UIStoryboard = self.storyboard!
-                let second = storyboard.instantiateViewController(withIdentifier: target)
-                self.present(second, animated: true, completion: nil)
-            }
-        }
-    }
-    
 }
 extension MenuViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -118,5 +74,46 @@ extension MenuViewController: UITableViewDataSource {
     
 }
 extension MenuViewController: UITableViewDelegate {
-    
+    // セルがタップされた
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let index = indexPath.row
+        if (index == 2) {
+            let alert: UIAlertController = UIAlertController(title: "通常は利用しているライブラリなどを表示します。ライブラリによってはライセンス上、アプリで利用していることを明記する必要がある場合が多いです。", message: "", preferredStyle:  UIAlertController.Style.actionSheet)
+            alert.addAction(
+                UIAlertAction(title: "閉じる", style: UIAlertAction.Style.default, handler: {
+                    (action: UIAlertAction) -> Void in
+                    // TODO
+                    print("完了")
+                })
+            )
+            self.present(alert, animated: true, completion: nil)
+            return
+        }
+        
+        // 画面遷移
+        var target: String = ""
+        switch (index) {
+        case 0:
+            target = "menuToList"
+        case 1:
+            target = "menuToCreate"
+        default:
+            target = "menuToList"
+        }
+        self.performSegue(withIdentifier: target, sender: nil)
+
+//        var target: String = ""
+//        switch (index) {
+//        case 0:
+//            target = "listTodo"
+//        case 1:
+//            target = "createTodo"
+//        default:
+//            target = "listTodo"
+//        }
+//        let storyboard: UIStoryboard = self.storyboard!
+//        let second = storyboard.instantiateViewController(withIdentifier: target)
+//        self.present(second, animated: true, completion: nil)
+        
+    }
 }
