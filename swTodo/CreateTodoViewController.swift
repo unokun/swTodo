@@ -5,15 +5,94 @@
 //  Created by Masaaki Uno on 2018/10/19.
 //  Copyright © 2018 Masaaki Uno. All rights reserved.
 //
-
+// datepicker
+// https://qiita.com/iritec/items/f05c79590640e6ebbd85
+// https://www.egao-inc.co.jp/programming/swift_uidatepicker/
+//
+// 日付操作(Date, Calendar, DateComponents)
+// https://qiita.com/isom0242/items/e83ab77a3f56f66edd2f
+//
 import UIKit
 
 class CreateTodoViewController: UIViewController {
     let appDelegate:AppDelegate = UIApplication.shared.delegate as! AppDelegate
 
     @IBOutlet weak var todoTitle: UITextField!
-    @IBOutlet weak var todoDeadline: UIDatePicker!
+//    @IBOutlet weak var todoDeadline: UIDatePicker!
     @IBOutlet weak var todoDetail: UITextView!
+    
+    @IBOutlet weak var todoLimitDate: UITextField!
+    var toolBar: UIToolbar!
+    
+    override func viewDidLoad() {
+        // 本文入力エリアに枠線をつける
+        todoDetail.layer.borderWidth = 1
+        todoDetail.layer.borderColor = UIColor.lightGray.cgColor
+        
+        // 日付picker用ツールバー
+        toolBar = UIToolbar()
+        toolBar.sizeToFit()
+        // 右寄せ
+        let spacelItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
+        let toolBarButton  = UIBarButtonItem(title: "閉じる", style: .plain, target: self, action: #selector(closeButtonTapped))
+        toolBar.items = [spacelItem, toolBarButton]
+        todoLimitDate.inputAccessoryView = toolBar
+        
+    }
+
+    // datepicker関連処理
+    // 「閉じる」ボタンタップ
+    @objc func closeButtonTapped() {
+        todoLimitDate.resignFirstResponder()
+    }
+    
+    @IBAction func todoLimitEdittingEnd(_ sender: UITextField) {
+
+    }
+    
+    
+    /// Todo期限入力フィールドのイベント：編集開始（フォーカスイン）
+    /// datepickerを表示する
+    /// - Parameter sender: <#sender description#>
+    @IBAction func todoLimitEdittingBegin(_ sender: UITextField) {
+        let datePickerView:UIDatePicker = UIDatePicker()
+        datePickerView.datePickerMode = UIDatePicker.Mode.date
+        sender.inputView = datePickerView
+        datePickerView.addTarget(self, action: #selector(datePickerValueChanged), for: UIControl.Event.valueChanged)
+        
+        // Todo期限入力フィールドの値で日付を初期化する
+        if let text = todoLimitDate.text {
+            var date = Date()
+            if !text.isEmpty {
+                let formatter = ISO8601DateFormatter()
+                formatter.timeZone = TimeZone(identifier: "Asia/Tokyo")!
+                date = formatter.date(from: text)!
+            }
+            datePickerView.date = date
+        }
+    }
+    
+    /// Datepickerのイベント：値が変更された
+    /// textFieldに選択された日付をセットする
+    /// - Parameter sender: <#sender description#>
+    @objc func datePickerValueChanged(sender:UIDatePicker) {
+        todoLimitDate.text = convertISO8601DateFormatString(date: sender.date)
+    }
+    
+    /// 日付をISO08601フォーマット文字列に変換する(時分秒は0にする)
+    ///
+    /// - Parameter date: <#date description#>
+    /// - Returns: <#return value description#>
+    func convertISO8601DateFormatString(date: Date) -> String {
+        let tzId  = "Asia/Tokyo"
+        var calendar = Calendar.current
+        calendar.timeZone = TimeZone(identifier: tzId)!
+        let compornets = calendar.dateComponents([.year, .month, .day], from: date)
+        
+        let formatter = ISO8601DateFormatter()
+        formatter.timeZone = TimeZone(identifier: tzId)!
+        return formatter.string(from: calendar.date(from: compornets)!)
+    }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         // キーボードをしまう(フォーカスアウト)
@@ -32,9 +111,7 @@ class CreateTodoViewController: UIViewController {
         }
         let subject = todoTitle.text!
         let body = todoDetail.text!
-        let formatter = ISO8601DateFormatter()
-        formatter.timeZone = TimeZone.current
-        let limit = formatter.string(from: todoDeadline.date)
+        let limit = todoLimitDate.text!
         
         var success = false
         do {
@@ -80,12 +157,18 @@ class CreateTodoViewController: UIViewController {
         }
         
         // 期日
-        let now = Date()
-        let limit = todoDeadline.date
-        if limit.compare(now) != ComparisonResult.orderedDescending {
-            showMessage(title: "期限", message: "未来を設定してください", completionHandler: nil)
-            return false
-
+        if let text = todoLimitDate.text {
+            if text.isEmpty {
+                showMessage(title: "TODO期限", message: "期限を入力してください", completionHandler: nil)
+                return false
+            }
+            let formatter = ISO8601DateFormatter()
+            formatter.timeZone = TimeZone.current
+            let now = formatter.string(from: Date())
+            if text.compare(now) != ComparisonResult.orderedDescending {
+                showMessage(title: "期限", message: "未来を設定してください", completionHandler: nil)
+                return false
+            }
         }
 
         return true
@@ -123,15 +206,5 @@ class CreateTodoViewController: UIViewController {
             })
         )
         self.present(alert, animated: true, completion: nil)
-    }
-    
-    override func viewDidLoad() {
-        // 本文入力エリアに枠線をつける
-        todoDetail.layer.borderWidth = 1
-        todoDetail.layer.borderColor = UIColor.lightGray.cgColor
-        
-        // Datepicker
-        todoDeadline.layer.borderWidth = 1
-        todoDeadline.layer.borderColor = UIColor.lightGray.cgColor
     }
 }
